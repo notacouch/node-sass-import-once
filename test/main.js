@@ -4,13 +4,21 @@ var should = require('should'),
     sass = require('node-sass'),
     path = require('path'),
     fs = require('fs'),
-    importer = require('../index');
+    importer = require('../index'),
+    eol = require('eol');
 
 var filePath = function (file) {
   return path.join(__dirname, 'sass', file);
 };
 var bowerPath = function (file) {
   return path.join(__dirname, '../bower_components', file);
+};
+
+// Normalize filenames to pass the test on Windows
+var normalizePaths = function (paths) {
+  paths.forEach(function (file, index) {
+    paths[index] = path.normalize(file);
+  });
 };
 
 describe('import-once', function () {
@@ -30,9 +38,10 @@ describe('import-once', function () {
         throw err;
       }
       should.exist(result);
+      normalizePaths(result.stats.includedFiles);
       result.stats.includedFiles.should.eql(expectedIncludes);
-      String(result.css).should.equal(
-        fs.readFileSync(path.join(__dirname, 'css/basic-import-once.css'), 'utf8')
+      eol.auto(String(result.css)).should.equal(
+        eol.auto(fs.readFileSync(path.join(__dirname, 'css/basic-import-once.css'), 'utf8'))
       );
       done();
     });
@@ -53,9 +62,10 @@ describe('import-once', function () {
             throw err;
           }
           should.exist(result);
+          normalizePaths(result.stats.includedFiles);
           result.stats.includedFiles.should.eql(expectedIncludes);
-          String(result.css).should.equal(
-            fs.readFileSync(path.join(__dirname, 'css/imported-scss.css'), 'utf8')
+          eol.auto(String(result.css)).should.equal(
+            eol.auto(fs.readFileSync(path.join(__dirname, 'css/imported-scss.css'), 'utf8'))
           );
           done();
         });
@@ -79,9 +89,10 @@ describe('import-once', function () {
         throw err;
       }
       should.exist(result);
+      normalizePaths(result.stats.includedFiles);
       result.stats.includedFiles.should.eql(expectedIncludes);
-      String(result.css).should.equal(
-        fs.readFileSync(path.join(__dirname, 'css/imported-index.css'), 'utf8')
+      eol.auto(String(result.css)).should.equal(
+        eol.auto(fs.readFileSync(path.join(__dirname, 'css/imported-index.css'), 'utf8'))
       );
       done();
     });
@@ -105,10 +116,11 @@ describe('import-once', function () {
         throw err;
       }
       should.exist(result);
+      normalizePaths(result.stats.includedFiles);
       result.stats.includedFiles.should.eql(expectedIncludes);
       // console.log(result.css.toString());
-      String(result.css).should.equal(
-        fs.readFileSync(path.join(__dirname, 'css/imported-css.css'), 'utf8')
+      eol.auto(String(result.css)).should.equal(
+        eol.auto(fs.readFileSync(path.join(__dirname, 'css/imported-css.css'), 'utf8'))
       );
       done();
     });
@@ -149,10 +161,11 @@ describe('import-once', function () {
         throw err;
       }
       should.exist(result);
+      normalizePaths(result.stats.includedFiles);
       result.stats.includedFiles.should.eql(expectedIncludes);
       // console.log(result.css.toString());
-      String(result.css).should.equal(
-        fs.readFileSync(path.join(__dirname, 'css/imported-bower.css'), 'utf8')
+      eol.auto(String(result.css)).should.equal(
+        eol.auto(fs.readFileSync(path.join(__dirname, 'css/imported-bower.css'), 'utf8'))
       );
       done();
     });
@@ -173,11 +186,12 @@ describe('import-once', function () {
         throw err;
       }
       should.exist(result);
+      normalizePaths(result.stats.includedFiles);
       // console.log(result.stats.includedFiles);
       result.stats.includedFiles.should.eql(expectedIncludes);
       // console.log(result.css.toString());
-      String(result.css).should.equal(
-        fs.readFileSync(path.join(__dirname, 'css/imported-json.css'), 'utf8')
+      eol.auto(String(result.css)).should.equal(
+        eol.auto(fs.readFileSync(path.join(__dirname, 'css/imported-json.css'), 'utf8'))
       );
       done();
     });
@@ -199,10 +213,11 @@ describe('import-once', function () {
       }
       should.exist(result);
       // console.log(result.stats.includedFiles);
+      normalizePaths(result.stats.includedFiles);
       result.stats.includedFiles.should.eql(expectedIncludes);
       // console.log(result.css.toString());
-      String(result.css).should.equal(
-        fs.readFileSync(path.join(__dirname, 'css/imported-json.css'), 'utf8')
+      eol.auto(String(result.css)).should.equal(
+        eol.auto(fs.readFileSync(path.join(__dirname, 'css/imported-json.css'), 'utf8'))
       );
       done();
     });
@@ -228,10 +243,11 @@ describe('import-once', function () {
       }
       should.exist(result);
       // console.log(result.stats.includedFiles);
+      normalizePaths(result.stats.includedFiles);
       result.stats.includedFiles.should.eql(expectedIncludes);
       // console.log(result.css.toString());
-      String(result.css).should.equal(
-        fs.readFileSync(path.join(__dirname, 'css/imported-custom.css'), 'utf8')
+      eol.auto(String(result.css)).should.equal(
+        eol.auto(fs.readFileSync(path.join(__dirname, 'css/imported-custom.css'), 'utf8'))
       );
       done();
     });
@@ -256,10 +272,11 @@ describe('import-once', function () {
         throw err;
       }
       should.exist(result);
+      normalizePaths(result.stats.includedFiles);
       result.stats.includedFiles.should.eql(expectedIncludes);
       // console.log(result.css.toString());
-      String(result.css).should.equal(
-        fs.readFileSync(path.join(__dirname, 'css/imported-bootstrap.css'), 'utf8')
+      eol.auto(String(result.css)).should.equal(
+        eol.auto(fs.readFileSync(path.join(__dirname, 'css/imported-bootstrap.css'), 'utf8'))
       );
       done();
     });
@@ -283,9 +300,10 @@ describe('import-once', function () {
         throw err;
       }
       should.exist(result);
+      normalizePaths(result.stats.includedFiles);
       result.stats.includedFiles.should.eql(expectedIncludes);
-      String(result.css).should.equal(
-        fs.readFileSync(path.join(__dirname, 'css/basic-import-once.css'), 'utf8')
+      eol.auto(String(result.css)).should.equal(
+        eol.auto(fs.readFileSync(path.join(__dirname, 'css/basic-import-once.css'), 'utf8'))
       );
       done();
     });
