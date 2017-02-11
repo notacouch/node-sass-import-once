@@ -47,109 +47,6 @@ describe('import-once', function () {
     });
   });
 
-  it('should resolve Sass files one direcory up', function(done) {
-    var file = filePath('import-ancestor.scss'),
-        expectedIncludes = [
-          file,
-          filePath('_partial-with-selectors.scss'),
-          filePath('foo/_ancestor.scss')
-        ];
-
-    sass.render({
-      'file': file,
-      'importer': importer
-    }, function (err, result) {
-      if (err) {
-        throw err;
-      }
-      should.exist(result);
-      normalizePaths(result.stats.includedFiles);
-      result.stats.includedFiles.should.eql(expectedIncludes);
-      eol.auto(String(result.css)).should.equal(
-        eol.auto(fs.readFileSync(path.join(__dirname, 'css/import-ancestor.css'), 'utf8'))
-      );
-      done();
-    });
-  });
-
-  it('should resolve nested ancestor Sass files when using includePaths', function(done) {
-    var file = filePath('nested/ancestor/import-ancestor.scss'),
-        expectedIncludes = [
-          file,
-          filePath('_partial-with-selectors.scss'),
-          filePath('nested/_ancestor.scss')
-        ];
-
-    sass.render({
-      'file': file,
-      'importer': importer,
-      'includePaths': [path.join('fake', 'dir')]
-    }, function (err, result) {
-      if (err) {
-        throw err;
-      }
-      should.exist(result);
-      normalizePaths(result.stats.includedFiles);
-      result.stats.includedFiles.should.eql(expectedIncludes);
-      eol.auto(String(result.css)).should.equal(
-        eol.auto(fs.readFileSync(path.join(__dirname, 'css/import-ancestor.css'), 'utf8'))
-      );
-      done();
-    });
-  });
-
-  it('should resolve nested ancestor Sass files when using gulp-sass-like includePaths', function(done) {
-    var file = filePath('nested/ancestor/import-ancestor.scss'),
-        expectedIncludes = [
-          file,
-          filePath('_partial-with-selectors.scss'),
-          filePath('nested/_ancestor.scss')
-        ];
-
-    sass.render({
-      'file': file,
-      'importer': importer,
-      // Mimic gulp sass
-      'includePaths': [ path.join('nested', 'ancestor'), path.join('fake', 'dir') ]
-    }, function (err, result) {
-      if (err) {
-        throw err;
-      }
-      should.exist(result);
-      normalizePaths(result.stats.includedFiles);
-      result.stats.includedFiles.should.eql(expectedIncludes);
-      eol.auto(String(result.css)).should.equal(
-        eol.auto(fs.readFileSync(path.join(__dirname, 'css/import-ancestor.css'), 'utf8'))
-      );
-      done();
-    });
-  });
-
-  it('should resolve partials with dot in their name', function (done) {
-    var file = filePath('import-dot-partial.scss'),
-        expectedIncludes = [
-          file,
-          filePath('_partial-with-selectors.scss'),
-          filePath('_dot.partial.scss')
-        ];
-
-    sass.render({
-      'file': file,
-      'importer': importer
-    }, function (err, result) {
-      if (err) {
-        throw err;
-      }
-      should.exist(result);
-      normalizePaths(result.stats.includedFiles);
-      result.stats.includedFiles.should.eql(expectedIncludes);
-      eol.auto(String(result.css)).should.equal(
-        eol.auto(fs.readFileSync(path.join(__dirname, 'css/import-dot.css'), 'utf8'))
-      );
-      done();
-    });
-  });
-
   it('should resolve import with Sass extensions', function(done) {
     var file = filePath('import-scss.scss'),
         expectedIncludes = [
@@ -407,6 +304,30 @@ describe('import-once', function () {
       result.stats.includedFiles.should.eql(expectedIncludes);
       eol.auto(String(result.css)).should.equal(
         eol.auto(fs.readFileSync(path.join(__dirname, 'css/basic-import-once.css'), 'utf8'))
+      );
+      done();
+    });
+  });
+
+  it('should import a file with dots in its name', function(done) {
+    var file = filePath('import-with-dot.scss'),
+        expectedIncludes = [
+          file,
+          filePath('file.with.dot.scss')
+        ];
+
+    sass.render({
+      'file': file,
+      'importer': importer
+    }, function(err, result) {
+      if (err) {
+        throw err;
+      }
+      should.exist(result);
+      normalizePaths(result.stats.includedFiles);
+      result.stats.includedFiles.should.eql(expectedIncludes);
+      eol.auto(String(result.css)).should.equal(
+        eol.auto(fs.readFileSync(path.join(__dirname, 'css/import-with-dot.css'), 'utf8'))
       );
       done();
     });
